@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   // Read the environment variable that Vercel injects
   // "CUSTOMER" handles public traffic, "ADMIN" handles the backend dashboard.
   const appMode = process.env.DEPLOYMENT_TYPE || 'CUSTOMER'
