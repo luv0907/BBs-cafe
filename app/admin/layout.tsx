@@ -21,6 +21,11 @@ const sidebarItems = [
   { icon: Settings, label: 'Settings', href: '/admin/settings' },
 ]
 
+const AUTHORIZED_ADMINS = [
+  'akshaybouroju@gmail.com',
+  'sushmithasiridoshi@gmail.com'
+]
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -42,8 +47,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         if (pathname !== '/admin/login') {
           router.push('/admin/login')
         }
-      } else if (user.email !== 'akshaybouroju@gmail.com') {
-        // If logged in but NOT the true admin, forcefully eject them to the public cafeteria!
+      } else if (!user.email || !AUTHORIZED_ADMINS.includes(user.email)) {
+        // If logged in but NOT on the whitelist, forcefully eject them to the public cafeteria!
         router.push('/')
       }
     }
@@ -142,10 +147,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <div className="flex items-center gap-1.5">
                     <div className={cn(
                       "w-1.5 h-1.5 rounded-full animate-pulse",
-                      user.email === 'akshaybouroju@gmail.com' ? "bg-green-500" : "bg-yellow-500"
+                      user.email && AUTHORIZED_ADMINS.includes(user.email) ? "bg-green-500" : "bg-yellow-500"
                     )} />
                     <span className="text-[9px] uppercase font-bold text-muted-foreground opacity-50 tracking-widest">
-                      {user.email === 'akshaybouroju@gmail.com' ? 'Verified Admin' : 'Standard User'}
+                      {user.email && AUTHORIZED_ADMINS.includes(user.email) ? 'Verified Admin' : 'Standard User'}
                     </span>
                   </div>
                   <span className="text-[8px] text-muted-foreground opacity-40 font-mono mt-0.5">{user.email}</span>
